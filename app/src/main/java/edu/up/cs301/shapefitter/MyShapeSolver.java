@@ -29,33 +29,42 @@ public class MyShapeSolver extends ShapeSolver {
      */
     public void solve() {
 
-        // ****dummied up****
-        // always "finds" a solution at row 3, column 4, with a 90-degree clockwise orientation
-        //display(3, 4, Orientation.ROTATE_CLOCKWISE);
+        //initialization
+        undisplay();
 
 
-        boolean match = true;
 
+        //along each row, compare shape array with world array
+        for(int scanRow = 0; scanRow <= world.length - shape.length; scanRow++) {
+            //initialize boolean match to true
+            boolean match = true;
 
-        //iterate through entire shape array
-        for(int row = 0; row < shape.length; row++){
-            for(int col = 0; col < shape[0].length; col++){
+            //iterate through each square of shape array and respective world array slice
+            for (int row = 0; row < shape.length; row++) {
+                for (int col = 0; col < shape[0].length; col++) {
 
-                //if no match is found for ANY singular place, entire shape comparison is voided
-                if(shape[row][col] != world[row][col]){
-                    match = false;
+                    //debug
+                    //display(scanRow + row, col, Orientation.ROTATE_NONE);
+
+                    //if no match is found for ANY singular place, entire shape comparison is voided
+                    if (shape[row][col] != world[scanRow + row][col]) {
+                        match = false;
+                        //break, match is false so no need to keep comparing
+                        break;
+                    }
+                }
+
+                if(!match){
+                    //break if not matching (computation optimization)
+                    break;
                 }
             }
+
+            //displays depending on match
+            if (match) {
+                display(scanRow, 0, Orientation.ROTATE_NONE);
+            }
         }
-
-        //displays or undisplays depending on match
-        if(match){
-            display(0, 0, Orientation.ROTATE_NONE);
-        } else {
-            undisplay();
-        }
-
-
 
     }
 
