@@ -1,5 +1,6 @@
 package edu.up.cs301.shapefitter;
 
+import android.media.AudioRecord;
 import android.util.Log;
 
 /**
@@ -31,13 +32,14 @@ public class MyShapeSolver extends ShapeSolver {
 
         //initialization
         undisplay();
+
         //along each row and column, compare shape array with world array
         for(int scanRow = 0; scanRow <= world.length - shape.length; scanRow++) {
             for(int scanCol = 0; scanCol <= world.length - shape.length; scanCol++) {
 
                 //initialize boolean match to true
-                boolean standardMatch = true;
-                //boolean clockwiseRotationMatch = true;
+                boolean standardMatch = false;
+                boolean CCwiseMatch = true;
 
                 //iterate through each square of shape array and respective world array slice
                 for (int row = 0; row < shape.length; row++) {
@@ -48,9 +50,22 @@ public class MyShapeSolver extends ShapeSolver {
 
                         //if no match is found for ANY singular place, entire shape comparison is voided
                         //No rotation
-                        if (shape[row][col] == true && world[scanRow + row][scanCol + col] == false) {
-                            standardMatch = false;
+
+
+                        for (Orientation or : Orientation.values()){
+                            if(or == Orientation.ROTATE_NONE){
+                                if (shape[row][col] == true && world[scanRow + row][scanCol + col] == false) {
+                                    standardMatch = false;
+                                }
+                            } else if(or == Orientation.ROTATE_COUNTERCLOCKWISE) {
+
+                                if (shape[col][shape.length - row - 1] == true && world[scanRow + row][scanCol + col] == false) {
+                                    CCwiseMatch = false;
+                                }
+                            }
                         }
+
+
 
                         //if rotated
                         /*
@@ -63,8 +78,12 @@ public class MyShapeSolver extends ShapeSolver {
 
                 //displays depending on match
 
+
                 if(standardMatch) {
                     display(scanRow, scanCol, Orientation.ROTATE_NONE);
+                    return;
+                } else if(CCwiseMatch) {
+                    display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE);
                     return;
                 }
                 /*

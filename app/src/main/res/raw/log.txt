@@ -1,1 +1,4 @@
-Log your changes here.
+Having issues with display() always being called
+    fixed by adding a return
+
+
