@@ -31,13 +31,13 @@ public class MyShapeSolver extends ShapeSolver {
 
         //initialization
         undisplay();
-
         //along each row and column, compare shape array with world array
         for(int scanRow = 0; scanRow <= world.length - shape.length; scanRow++) {
             for(int scanCol = 0; scanCol <= world.length - shape.length; scanCol++) {
 
                 //initialize boolean match to true
-                boolean match = true;
+                boolean standardMatch = true;
+                //boolean clockwiseRotationMatch = true;
 
                 //iterate through each square of shape array and respective world array slice
                 for (int row = 0; row < shape.length; row++) {
@@ -47,24 +47,31 @@ public class MyShapeSolver extends ShapeSolver {
                         //display(scanRow + row, scanCol + col, Orientation.ROTATE_NONE);
 
                         //if no match is found for ANY singular place, entire shape comparison is voided
-                        if (shape[row][col] != world[scanRow + row][scanCol + col]) {
-                            match = false;
-                            //break, match is false so no need to keep comparing
-                            break;
+                        //No rotation
+                        if (shape[row][col] == true && world[scanRow + row][scanCol + col] == false) {
+                            standardMatch = false;
                         }
-                    }
 
-                    if (!match) {
-                        //break if not matching (computation optimization)
-                        break;
+                        //if rotated
+                        /*
+                        if (shape[col][row] != world[scanRow + row][scanCol + col]) {
+                            clockwiseRotationMatch = false;
+                        }
+                         */
                     }
                 }
 
                 //displays depending on match
 
-                if (match) {
+                if(standardMatch) {
                     display(scanRow, scanCol, Orientation.ROTATE_NONE);
+                    return;
                 }
+                /*
+                else if(clockwiseRotationMatch){
+                    display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE);
+                }
+                */
             }
         }
 
