@@ -32,37 +32,39 @@ public class MyShapeSolver extends ShapeSolver {
         //initialization
         undisplay();
 
-
-
-        //along each row, compare shape array with world array
+        //along each row and column, compare shape array with world array
         for(int scanRow = 0; scanRow <= world.length - shape.length; scanRow++) {
-            //initialize boolean match to true
-            boolean match = true;
+            for(int scanCol = 0; scanCol <= world.length - shape.length; scanCol++) {
 
-            //iterate through each square of shape array and respective world array slice
-            for (int row = 0; row < shape.length; row++) {
-                for (int col = 0; col < shape[0].length; col++) {
+                //initialize boolean match to true
+                boolean match = true;
 
-                    //debug
-                    //display(scanRow + row, col, Orientation.ROTATE_NONE);
+                //iterate through each square of shape array and respective world array slice
+                for (int row = 0; row < shape.length; row++) {
+                    for (int col = 0; col < shape[0].length; col++) {
 
-                    //if no match is found for ANY singular place, entire shape comparison is voided
-                    if (shape[row][col] != world[scanRow + row][col]) {
-                        match = false;
-                        //break, match is false so no need to keep comparing
+                        //debug
+                        //display(scanRow + row, scanCol + col, Orientation.ROTATE_NONE);
+
+                        //if no match is found for ANY singular place, entire shape comparison is voided
+                        if (shape[row][col] != world[scanRow + row][scanCol + col]) {
+                            match = false;
+                            //break, match is false so no need to keep comparing
+                            break;
+                        }
+                    }
+
+                    if (!match) {
+                        //break if not matching (computation optimization)
                         break;
                     }
                 }
 
-                if(!match){
-                    //break if not matching (computation optimization)
-                    break;
-                }
-            }
+                //displays depending on match
 
-            //displays depending on match
-            if (match) {
-                display(scanRow, 0, Orientation.ROTATE_NONE);
+                if (match) {
+                    display(scanRow, scanCol, Orientation.ROTATE_NONE);
+                }
             }
         }
 
