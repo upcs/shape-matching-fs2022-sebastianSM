@@ -1,9 +1,11 @@
 package edu.up.cs301.shapefitter;
 
+import android.util.Log;
+
 /**
  * Solver: finds fit for a shape; completed solution by Vegdahl.
  *
- * @author **** put your name here ****
+ * @author Sebastian Santos-Mendoza
  * @version **** put completion date here ****
  */
 public class MyShapeSolver extends ShapeSolver {
@@ -29,7 +31,32 @@ public class MyShapeSolver extends ShapeSolver {
 
         // ****dummied up****
         // always "finds" a solution at row 3, column 4, with a 90-degree clockwise orientation
-        display(3, 4, Orientation.ROTATE_CLOCKWISE);
+        //display(3, 4, Orientation.ROTATE_CLOCKWISE);
+
+
+        boolean match = true;
+
+
+        //iterate through entire shape array
+        for(int row = 0; row < shape.length; row++){
+            for(int col = 0; col < shape[0].length; col++){
+
+                //if no match is found for ANY singular place, entire shape comparison is voided
+                if(shape[row][col] != world[row][col]){
+                    match = false;
+                }
+            }
+        }
+
+        //displays or undisplays depending on match
+        if(match){
+            display(0, 0, Orientation.ROTATE_NONE);
+        } else {
+            undisplay();
+        }
+
+
+
     }
 
     /**
