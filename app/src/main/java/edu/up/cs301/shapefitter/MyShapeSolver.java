@@ -38,8 +38,9 @@ public class MyShapeSolver extends ShapeSolver {
             for(int scanCol = 0; scanCol <= world.length - shape.length; scanCol++) {
 
                 //initialize boolean match to true
-                boolean standardMatch = false;
+                boolean standardMatch = true;
                 boolean CCwiseMatch = true;
+                boolean clockwiseMatch = true;
 
                 //iterate through each square of shape array and respective world array slice
                 for (int row = 0; row < shape.length; row++) {
@@ -58,9 +59,12 @@ public class MyShapeSolver extends ShapeSolver {
                                     standardMatch = false;
                                 }
                             } else if(or == Orientation.ROTATE_COUNTERCLOCKWISE) {
-
                                 if (shape[col][shape.length - row - 1] == true && world[scanRow + row][scanCol + col] == false) {
                                     CCwiseMatch = false;
+                                }
+                            } else if(or == Orientation.ROTATE_CLOCKWISE){
+                                if (shape[shape.length - col - 1][row] == true && world[scanRow + row][scanCol + col] == false) {
+                                    clockwiseMatch = false;
                                 }
                             }
                         }
@@ -84,6 +88,9 @@ public class MyShapeSolver extends ShapeSolver {
                     return;
                 } else if(CCwiseMatch) {
                     display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE);
+                    return;
+                } else if(clockwiseMatch){
+                    display(scanRow, scanCol, Orientation.ROTATE_CLOCKWISE);
                     return;
                 }
                 /*
