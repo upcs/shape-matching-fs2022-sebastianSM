@@ -42,6 +42,10 @@ public class MyShapeSolver extends ShapeSolver {
                 boolean CCwiseMatch = true;
                 boolean clockwiseMatch = true;
                 boolean oneEightyMatch = true;
+                boolean mirrorMatch = true;
+                boolean clockMirrorMatch = true;
+                boolean oneEightyMirrorMatch = true;
+                boolean CCMirror = true;
 
                 //iterate through each square of shape array and respective world array slice
                 for (int row = 0; row < shape.length; row++) {
@@ -71,17 +75,24 @@ public class MyShapeSolver extends ShapeSolver {
                                 if (shape[shape.length - row - 1][shape.length - col - 1] == true && world[scanRow + row][scanCol + col] == false) {
                                     oneEightyMatch = false;
                                 }
+                            } else if(or == Orientation.ROTATE_NONE_REV){
+                                if (shape[row][shape.length - col - 1] == true && world[scanRow + row][scanCol + col] == false) {
+                                    mirrorMatch = false;
+                                }
+                            } else if(or == Orientation.ROTATE_CLOCKWISE_REV){
+                                if (shape[col][row] == true && world[scanRow + row][scanCol + col] == false) {
+                                    clockMirrorMatch = false;
+                                }
+                            } else if(or == Orientation.ROTATE_180_REV){
+                                if (shape[shape.length - row - 1][col] == true && world[scanRow + row][scanCol + col] == false) {
+                                    oneEightyMirrorMatch = false;
+                                }
+                            } else if(or == Orientation.ROTATE_COUNTERCLOCKWISE_REV){
+                                if (shape[shape.length - col - 1][shape.length - row - 1] == true && world[scanRow + row][scanCol + col] == false) {
+                                    CCMirror = false;
+                                }
                             }
                         }
-
-
-
-                        //if rotated
-                        /*
-                        if (shape[col][row] != world[scanRow + row][scanCol + col]) {
-                            clockwiseRotationMatch = false;
-                        }
-                         */
                     }
                 }
 
@@ -99,6 +110,19 @@ public class MyShapeSolver extends ShapeSolver {
                     return;
                 } else if(oneEightyMatch){
                     display(scanRow, scanCol, Orientation.ROTATE_180);
+                    return;
+                } else if(mirrorMatch){
+                    display(scanRow, scanCol, Orientation.ROTATE_NONE_REV);
+                    return;
+                } else if(clockMirrorMatch){
+                    display(scanRow, scanCol, Orientation.ROTATE_CLOCKWISE_REV);
+                    return;
+                } else if(oneEightyMirrorMatch){
+                    display(scanRow, scanCol, Orientation.ROTATE_180_REV);
+                    return;
+                } else if(CCMirror){
+                    display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE_REV);
+                    return;
                 }
                 /*
                 else if(clockwiseRotationMatch){
