@@ -1,4 +1,11 @@
 Having issues with display() always being called
     fixed by adding a return
 
+Had issues with figuring out row and col specifications
+    figured it out by drawing grids
 
+My check method is only sometimes returning the correct boolean value
+    I realized depending on the initial position, not all squares would be checked
+    My best bet is to implement a recursive function I think
+
+No outside help was used

@@ -1,14 +1,12 @@
 package edu.up.cs301.shapefitter;
 
-import android.media.AudioRecord;
-import android.util.Log;
-
 /**
  * Solver: finds fit for a shape; completed solution by Vegdahl.
  *
  * @author Sebastian Santos-Mendoza
- * @version **** put completion date here ****
+ * @version 9/16/2022
  */
+
 public class MyShapeSolver extends ShapeSolver {
 
     /**
@@ -33,7 +31,7 @@ public class MyShapeSolver extends ShapeSolver {
         //initialization
         undisplay();
 
-        //along each row and column, compare shape array with world array
+        //along each row and column of world array, compare shape array with world array
         for(int scanRow = 0; scanRow <= world.length - shape.length; scanRow++) {
             for(int scanCol = 0; scanCol <= world.length - shape.length; scanCol++) {
 
@@ -51,13 +49,8 @@ public class MyShapeSolver extends ShapeSolver {
                 for (int row = 0; row < shape.length; row++) {
                     for (int col = 0; col < shape[0].length; col++) {
 
-                        //debug
-                        //display(scanRow + row, scanCol + col, Orientation.ROTATE_NONE);
-
-                        //if no match is found for ANY singular place, entire shape comparison is voided
-                        //No rotation
-
-
+                        //for each of the orientations, looks for any discrepancies that nullify if the shape is found in
+                        // the respective orientation
                         for (Orientation or : Orientation.values()){
                             if(or == Orientation.ROTATE_NONE){
                                 if (shape[row][col] == true && world[scanRow + row][scanCol + col] == false) {
@@ -96,9 +89,7 @@ public class MyShapeSolver extends ShapeSolver {
                     }
                 }
 
-                //displays depending on match
-
-
+                //displays depending on type of match
                 if(standardMatch) {
                     display(scanRow, scanCol, Orientation.ROTATE_NONE);
                     return;
@@ -124,11 +115,6 @@ public class MyShapeSolver extends ShapeSolver {
                     display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE_REV);
                     return;
                 }
-                /*
-                else if(clockwiseRotationMatch){
-                    display(scanRow, scanCol, Orientation.ROTATE_COUNTERCLOCKWISE);
-                }
-                */
             }
         }
 
@@ -139,8 +125,93 @@ public class MyShapeSolver extends ShapeSolver {
      *
      * @return whether the shape is well-formed
      */
+    //this array is for keeping track of what square has been inspected already with check()
+    boolean[][] checked = new boolean[shape.length][shape.length];
+
     public boolean check() {
-        return Math.random() < 0.5;
+        //initialized such that no modification indicates failure
+        int sr = -1;
+        int sc = -1;
+
+        //count for how many true squares are in shape
+        int count = 0;
+
+        //iterate through shape, assigning sr and sc with location of last true square
+        //also counts number of true squares
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[0].length; col++) {
+                if(shape[row][col] == true){
+
+                    //sr and sc are set to rightmost, then bottom most true square
+                    sr = row;
+                    sc = col;
+
+                    count++;
+                }
+            }
+        }
+
+        //debug
+        //Log.d("","" + sr + "" + sc);
+
+        //if < 0, no true squares found
+        if(sr < 0 || sc < 0){
+            return false;
+        }
+
+        //initialize checker array to be all false
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[0].length; col++) {
+                checked[row][col] = false;
+            }
+        }
+
+        //represents how many squares are connected using recursive inspect method
+        int conn = inspect(sr, sc);
+
+        //compares connected with how many true squares in shape to see if all squares are part of connected
+        if(conn == count){
+            return true;
+        }
+
+        return false;
     }
 
+    //checks how many squares are adjacent to a given square
+    private int inspect(int r, int c){
+        checked[r][c] = true;
+        int count = 1;
+
+        //recursive inspection
+
+        //check above
+        if (r - 1 >= 0 && !checked[r - 1][c]){
+            if(shape[r - 1][c] == true) {
+                count += inspect(r - 1, c);
+            }
+        }
+
+        //check left
+        if (c - 1 >= 0 && !checked[r][c - 1]){
+            if(shape[r][c - 1] == true) {
+                count += inspect(r, c - 1);;
+            }
+        }
+
+        //check below
+        if (r + 1 < shape.length && !checked[r + 1][c]){
+            if(shape[r + 1][c] == true) {
+                count += inspect(r + 1, c);
+            }
+        }
+
+        //check right
+        if (c + 1 < shape.length && !checked[r][c + 1]){
+            if(shape[r][c + 1] == true) {
+                count += inspect(r, c + 1);;
+            }
+        }
+
+        return count;
+    }
 }
